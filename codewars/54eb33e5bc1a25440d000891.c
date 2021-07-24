@@ -64,17 +64,16 @@ char	*null_string()
 	return (result);
 }
 
-char 	*output_solution(long long *array, int size)
+int	output_solution(char **result, long long *array, int size)
 {
 	char		*tmp_result;
-	char		*result;
 	int			i;
 	int			j;
 	int			k;
 	long long	buf;
 
 	if (size < 2)
-		return (null_string());
+		return (EXIT_FAILURE);
 	i = -1;
 	j = size + 1; //, +[]
 	while (++i < size)
@@ -87,13 +86,10 @@ char 	*output_solution(long long *array, int size)
 		}		
 	}
 	tmp_result = NULL;
-	result = NULL;
-	tmp_result = (char *)malloc(sizeof(char) * j);
-	result = (char *)malloc(sizeof(char) * j);
-	if (tmp_result == NULL || result == NULL)
-		return (null_string());
+	tmp_result = (char *)malloc(sizeof(char) * j + 1);
+	if (tmp_result == NULL)
+		return (EXIT_FAILURE);
 	tmp_result[j] = '\0';
-	result[j] = '\0';
 	tmp_result[j - 1] = '[';
 	tmp_result[0] = ']';
 	i = -1;
@@ -111,12 +107,15 @@ char 	*output_solution(long long *array, int size)
 	}
 	i = -1;
 	k = j;
+	*result = realloc(*result, sizeof(char) * j + 1);
+	if (*result == NULL)
+		return (EXIT_FAILURE);
 	while (++i <= j)
 	{
-		result[i] = tmp_result[--k];
+		*(*result + i) = tmp_result[--k];
 	}
 	free(tmp_result);
-	return (result);
+	return (EXIT_SUCCESS);
 }
 
 char* decompose(long long n) {
@@ -127,12 +126,14 @@ char* decompose(long long n) {
 	long long	tmp_rem[100] = {0};
 	long long	tmp_e;
 	long long	tmp_r;
+	char		*result;
 	
 	i = 0;
 	j = 0;
 	tmp_rem[0] = pw(n);
 	tmp_ext[0] = n - 1;
-	while (tmp_rem[i] > 0)
+	result = null_string();
+	while (tmp_rem[i] > 0 && i >= 0)
 	{
 		tmp_r = tmp_rem[i] - pw(tmp_ext[i]);
 		tmp_e = brut_sqr(tmp_r);
@@ -148,14 +149,15 @@ char* decompose(long long n) {
 			tmp_ext[i] -= 1;
 		}
 	}
-	return (output_solution(tmp_ext, i));
+	output_solution(&result, tmp_ext, i);
+	return (result);
 }
 
 int main()
 {
 	char *result;
 
-	result = decompose(76);
+	result = decompose(9927447);
 	free(result);
 	return(0);
 }
