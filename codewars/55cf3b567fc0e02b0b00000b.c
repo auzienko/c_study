@@ -97,7 +97,7 @@ char* part(int n) {
     int     rage;
     int     *arr;
     int     *iarr;
-    float   med;
+    double  med;
     char    *result;
 
 
@@ -127,6 +127,12 @@ char* part(int n) {
             tmp++;
             continue ;
         }
+        while (tmp > arr[i])
+        {
+            arr[i+1] = arr[i];
+            tmp = tmp - arr[i];
+            i++;
+        }
         arr[i + 1] = tmp;
         j = -1;
         tmp = 1;
@@ -137,7 +143,7 @@ char* part(int n) {
             tmp *= arr[j];
         }
         if (tmp > n)
-            tryadd(&iarr, tmp, &size);
+             tryadd(&iarr, tmp, &size);
         tmp = 0;
         i++;
     }
@@ -164,7 +170,7 @@ char* part(int n) {
         med = (arr[size / 2 - 1] + arr[size / 2]) / 2.0;
     if ((result = (char *)malloc(sizeof(char) * 128)) == NULL)
         return (NULL);
-    sprintf(result,"Range: %d Average: %.2f Median: %.2f", rage, (float)tmp /(size) ,med);
+    sprintf(result,"Range: %d Average: %.2f Median: %.2f", rage, (double)tmp /(size) ,med);
     free (iarr);
     return (result);
 }
@@ -172,9 +178,7 @@ char* part(int n) {
 int main(void)
 {
     char    *result;
- //   int     j;
 
-//    j = powab(2,4);
     result = part(27);
     printf("%s\n", result);
     return (0);
